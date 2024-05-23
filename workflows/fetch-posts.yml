@@ -1,0 +1,29 @@
+name: Fetch and Store Posts
+
+on:
+  schedule:
+    # Runs at 5:00 AM and 5:00 PM UTC every day
+    - cron: '0 5 * * *'
+    - cron: '0 17 * * *'
+
+jobs:
+  fetch_posts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Edge Function
+        run: node fetchPosts.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
